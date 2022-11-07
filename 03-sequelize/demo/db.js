@@ -3,7 +3,7 @@ const modelPlayer = require('./Models/Player.js');
 const modelTeam = require('./Models/Team.js');
 
 // Connection URI
-const sequelize = new Sequelize('postgres://franco:12345@localhost:5432/demo', {
+const sequelize = new Sequelize('postgres://postgres:22julio92@localhost:5432/demo', {
   // logging: (...msg) => console.log(msg)
   logging: false
 });

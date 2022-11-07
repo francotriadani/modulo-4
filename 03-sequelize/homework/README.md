@@ -104,7 +104,7 @@ Es decir si se hace un request PUT a /character/age?value=40 deberá buscar todo
 
 Devolver simplemente un mensaje que diga 'Personajes actualizados'
 
-### Getter
+### Getter /* se hace en models /character */
 
 Vamos a definir un getter para el atributo age de los personajes, lo que queremos es que nos devuelva el valor de su edad pero concatenado con la frase 'years old' por lo que para un personaje que tenga 27 años nos debería devoler '27 years old'.
 

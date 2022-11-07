@@ -1,0 +1,117 @@
+.header on
+.mode column
+.timer o
+.mode box
+.schema
+
+
+
+CREATE TABLE Movies (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    year INTEGER DEFAULT VALUE NULL,
+    rank REAL DEFAULT VALUE NULL);
+
+CREATE TABLE Actors (
+    id INTEGER PRIMARY KEY,
+    fitst_name TEXT DEFAULT VALUE NULL,
+    last_name TEXT DEFAULT VALUE NULL,
+    gender TEXT DEFAULT VALUE NULL);
+    
+CREATE TABLE Roles (
+    Actor_id INTEGER,
+    movie_id INTEGER,
+    role_name TEXT DEFAULT VALUE NULL);
+
+SELECT name, year FROM movies WHERE years=1902 AND rank>5;
+
+1 Birth year -- Buscá todas las películas filmadas en el año que naciste.
+SELECT name, year FROM movies where year=1992;
+
+2 1982 -- Cuantas películas hay en la DB que sean del año 1982?
+SELECT COUNT(name) FROM movies where year=1982;
+
+3 Stacktors -- Buscá actores que tengan el substring stack en su apellido.
+SELECT last_name FROM Actors WHERE last_name LIKE '%stack%';
+
+4 Fame Name Game -- Buscá los 10 nombres y apellidos más populares entre los actores. Cuantos actores tienen cada uno de esos nombres y apellidos?
+SELECT first_name, last_name, COUNT(*) as total
+FROM actors
+GROUP BY LOWER(first_name), LOWER(last_name)
+ORDER by total DESC 
+limit 10;
+
+5 Prolific
+Listá el top 100 de actores más activos junto con el número de roles que haya realizado.
+SELECT first_name, last_name, COUNT(*) AS total_roles
+from actors
+JOIN roles on actors.id = roles.Actor_id
+GROUP BY actors.id
+ORDER by total_roles DESC
+LIMIT 10;
+
+6 bottom of the barrel
+SELECT genre, COUNT(*) AS total
+FROM movies_genres
+GROUP BY genre
+ORDER BY total
+LIMIT 15;
+
+7 bravehart
+SELECT first_name, last_name
+FROM actors
+JOIN roles ON roles.actor_id = actors.id
+JOIN movies ON roles.movie_id = movies.id
+where movies.name = "Braveheart" AND movies.year = 1995
+ORDER BY actors.last_name, actors.first_name;
+
+
+8
+SELECT directors.first_name, directors.last_name, movies.name, movies.year
+FROM directors
+JOIN movies_directors ON director_id = directors.id
+JOIN movies ON movies.id = movies_directors.movie_id
+JOIN movies_genres ON movies.id = movies_genres.movie_id
+WHERE movies_genres.genre = 'Film-Noir' AND movies.year % 4= 0
+ORDER BY movies.name;
+
+9
+SELECT first_name, last_name, movies.name
+FROM actors
+JOIN roles ON actors.id = roles.actor_id
+JOIN movies ON movies.id = roles.movie_id
+JOIN movies_genres ON movies.id = movies_genres.movie_id
+WHERE movies_genres.genre = "Drama" AND movies.id IN (
+    SELECT roles.movie_id
+    FROM roles
+    JOIN actors ON roles.actor_id = actors.id
+    WHERE actors.first_name = "Kevin" AND actors.last_name = "Bacon"
+);
+ 
+10 
+SELECT first_name, last_name from actors
+WHERE id IN (
+    SELECT actor_id
+    FROM roles
+    JOIN movies ON movies.id = roles.movie_id
+    WHERE movies.year < 1900 AND movies.year > 2000
+)
+limit 10;
+
+11 SELECT first_name, last_name, movies.name, COUNT(DISTINCT(role)) AS total
+FROM actors
+JOIN roles ON actors.id _ roles.actor_id
+JOIN movies ON movies.id = roles.movie_id
+WHERE movies.year > 1990
+GROUP BY roles.actor_id, roles.movie_id
+HAVING total > 5;
+
+12 
+SELECT year, COUNT(*) AS total
+FROM movies WHERE id IN(
+    SELECT movie_id
+    FROM roles
+    JOIN actors ON actors.id = roles.actor_id
+    WHERE actors.gender = "F"
+)
+GROUP BY year;
